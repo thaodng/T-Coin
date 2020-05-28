@@ -8,7 +8,7 @@ class Redis {
   constructor({ blockchain, redisUrl }) {
     this.blockchain = blockchain;
 
-    // play both roles pub and sub in application
+    // play both roles publisher and subscriber in application
     this.publisher = redis.createClient(redisUrl);
     this.subscriber = redis.createClient(redisUrl);
 

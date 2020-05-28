@@ -1,7 +1,4 @@
 const INIT_DIFFICULTY = 8;
-const BLOCK_GENERATION_INTERVAL = 3000; // miliseconds
-
-
 const GENESIS_BLOCK = {
   index: 0,
   nonce: 0,
@@ -12,7 +9,13 @@ const GENESIS_BLOCK = {
   hash: '0000e326186933fa83f0efd581d09409022ec07b73a10f549bbaa6472e8a1175'
 };
 
+const BLOCK_GENERATION_INTERVAL = 3000; // miliseconds
+
+// for testing purpose
+const STARTED_CAPITAL = 1000;
+
 module.exports = {
   GENESIS_BLOCK,
-  BLOCK_GENERATION_INTERVAL
+  BLOCK_GENERATION_INTERVAL,
+  STARTED_CAPITAL
 }
