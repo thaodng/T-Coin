@@ -1,4 +1,6 @@
 const INIT_DIFFICULTY = 8;
+const BLOCK_GENERATION_INTERVAL = 3000; // miliseconds
+
 
 const GENESIS_BLOCK = {
   index: 0,
@@ -11,5 +13,6 @@ const GENESIS_BLOCK = {
 };
 
 module.exports = {
-  GENESIS_BLOCK
+  GENESIS_BLOCK,
+  BLOCK_GENERATION_INTERVAL
 }

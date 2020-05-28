@@ -8,7 +8,7 @@ class Blockchain {
 
   addNewBlock({ data }) {
     const newBlock = Block.generateNextBlock({
-      latestBlock: this.chain[this.chain.length - 1],
+      lastestBlock: this.chain[this.chain.length - 1],
       data
     });
 
@@ -36,6 +36,9 @@ class Blockchain {
       if (validatedHash !== hash) {
         return false;
       }
+
+      // check if difficulty between two block > 1
+      if (Math.abs(previousBlock.difficulty - currentBlock.difficulty) > 1) return false;
     }
 
     return true;

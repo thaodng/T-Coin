@@ -1,5 +1,5 @@
 const hexToBinary = require('hex-to-binary');
-const { GENESIS_BLOCK } = require('../../config');
+const { GENESIS_BLOCK, BLOCK_GENERATION_INTERVAL } = require('../../config');
 const cryptoHash = require('../../utils/crypto-hash');
 
 class Block {
@@ -18,16 +18,16 @@ class Block {
   }
 
   // generateNextBlock == createBlock === add instance of class
-  static generateNextBlock({ latestBlock, data }) {
-    const index = latestBlock.index + 1;
-    const previousHash = latestBlock.hash;
-    const difficulty = latestBlock.difficulty;
-    
-    let nonce, timestamp;
+  static generateNextBlock({ lastestBlock, data }) {
+    const index = lastestBlock.index + 1;
+    const previousHash = lastestBlock.hash;
+
+    let nonce, difficulty, timestamp;
     nonce = 0;
 
     while (true) {
       timestamp = Date.now();
+      difficulty = Block.adjustDifficulty({ lastestBlock, timestamp });
       const hash = cryptoHash(index, nonce, difficulty, timestamp, data, previousHash);
       const hashInBinary = hexToBinary(hash);
       if (hashInBinary.startsWith('0'.repeat(difficulty))) {
@@ -37,6 +37,21 @@ class Block {
     }
   };
 
-}
+  static adjustDifficulty({ lastestBlock, timestamp }) {
+    const { difficulty } = lastestBlock;
+    const timeTaken = timestamp - lastestBlock.timestamp;
+
+    if (difficulty === 1) return;
+
+    if (timeTaken > BLOCK_GENERATION_INTERVAL * 2) {
+      return difficulty - 1;
+    } else if (timeTaken < BLOCK_GENERATION_INTERVAL / 2) {
+      return difficulty - 1;
+    } else {
+      return difficulty;
+    }
+  };
+
+};
 
 module.exports = Block;
