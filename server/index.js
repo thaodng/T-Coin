@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 
 const Block = require('./Components/Block');
+const hash = require('./utils/hash');
 console.log(Block.genesis());
 
 app.use(express.json());
