@@ -8,7 +8,7 @@ const GENESIS_BLOCK = {
   difficulty: INIT_DIFFICULTY,
   timestamp: 1,
   data: [],
-  previousHash: '-----',
+  previousHash: '0'.repeat(64),
   hash: '0000e326186933fa83f0efd581d09409022ec07b73a10f549bbaa6472e8a1175'
 };
 

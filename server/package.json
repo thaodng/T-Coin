@@ -4,19 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "server": "nodemon server.js",
-    "client": "npm start --prefix ../client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "start": "node index.js",
+    "server": "nodemon index.js",
+    "start-redis": "redis-server --daemonize yes",
+    "dev": "concurrently \"yarn run start-redis\" \"yarn run server\"",
+    "dev-peer": "cross-env GENERATE_PORT='true' yarn run server"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "crypto-js": "^4.0.0",
     "express": "^4.17.1",
-    "hex-to-binary": "^1.0.1"
+    "hex-to-binary": "^1.0.1",
+    "redis": "^3.0.2"
   },
   "devDependencies": {
+    "concurrently": "^5.2.0",
     "cross-env": "^7.0.2",
     "nodemon": "^2.0.4"
   }
