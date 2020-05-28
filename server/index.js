@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 
+const Block = require('./Components/Block');
+console.log(Block.genesis());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
