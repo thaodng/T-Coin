@@ -2,8 +2,12 @@ const express = require('express');
 const app = express();
 
 const Block = require('./Components/Block');
+const Blockchain = require('./Components/Blockchain');
 
-console.log(Block.generateNextBlock({ latestBlock: Block.genesis(), data: 'how are u' }));
+const blockchain = new Blockchain();
+blockchain.addNewBlock({ data: 'how are u' });
+
+console.log(Blockchain.isValidChain(blockchain.chain));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

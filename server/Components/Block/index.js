@@ -16,7 +16,7 @@ class Block {
     return new this(GENESIS_BLOCK)
   }
 
-  // generateNextBlock == createBlock
+  // generateNextBlock == createBlock === add instance of class
   static generateNextBlock({ latestBlock, data }) {
     const index = latestBlock.index + 1;
     const nonce = latestBlock.nonce + Math.random() * 100;
