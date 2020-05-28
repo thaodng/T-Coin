@@ -7,6 +7,7 @@ const Blockchain = require('./Components/Blockchain');
 const blockchain = new Blockchain();
 blockchain.addNewBlock({ data: 'how are u' });
 
+console.log(blockchain.chain);
 console.log(Blockchain.isValidChain(blockchain.chain));
 
 app.use(express.json());

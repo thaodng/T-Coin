@@ -1,4 +1,4 @@
-const INIT_DIFFICULTY = 3;
+const INIT_DIFFICULTY = 8;
 
 const GENESIS_BLOCK = {
   index: 0,

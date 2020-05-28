@@ -34,7 +34,6 @@ class Blockchain {
       // validate hash of current block
       const validatedHash = cryptyoHash(index, nonce, difficulty, timestamp, data, previousHash);
       if (validatedHash !== hash) {
-        console.log('Sai ở đây 3');
         return false;
       }
     }

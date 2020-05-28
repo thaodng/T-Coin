@@ -1,3 +1,4 @@
+const hexToBinary = require('hex-to-binary');
 const { GENESIS_BLOCK } = require('../../config');
 const cryptoHash = require('../../utils/crypto-hash');
 
@@ -19,14 +20,23 @@ class Block {
   // generateNextBlock == createBlock === add instance of class
   static generateNextBlock({ latestBlock, data }) {
     const index = latestBlock.index + 1;
-    const nonce = latestBlock.nonce + Math.random() * 100;
-    const difficulty = latestBlock.difficulty;
-    const timestamp = Date.now();
     const previousHash = latestBlock.hash;
-    const hash = cryptoHash(index, nonce, difficulty, timestamp, data, previousHash);
-    return new this({ index, nonce, difficulty, timestamp, data, previousHash, hash });
+    const difficulty = latestBlock.difficulty;
+    
+    let nonce, timestamp;
+    nonce = 0;
+
+    while (true) {
+      timestamp = Date.now();
+      const hash = cryptoHash(index, nonce, difficulty, timestamp, data, previousHash);
+      const hashInBinary = hexToBinary(hash);
+      if (hashInBinary.startsWith('0'.repeat(difficulty))) {
+        return new this({ index, nonce, difficulty, timestamp, data, previousHash, hash });
+      }
+      nonce++;
+    }
   };
-  
+
 }
 
 module.exports = Block;
