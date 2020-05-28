@@ -14,8 +14,14 @@ const BLOCK_GENERATION_INTERVAL = 3000; // miliseconds
 // for testing purpose
 const STARTED_CAPITAL = 1000;
 
+const REWARD_ADDRESS = { address: '**Reward-for-mining-a-new-block**' };
+
+const MINING_REWARD = 50;
+
 module.exports = {
   GENESIS_BLOCK,
   BLOCK_GENERATION_INTERVAL,
-  STARTED_CAPITAL
+  STARTED_CAPITAL,
+  REWARD_ADDRESS,
+  MINING_REWARD
 }
