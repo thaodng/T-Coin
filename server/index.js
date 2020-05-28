@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 
 const Block = require('./Components/Block');
-const hash = require('./utils/hash');
-console.log(Block.genesis());
+
+console.log(Block.generateNextBlock({ latestBlock: Block.genesis(), data: 'how are u' }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
