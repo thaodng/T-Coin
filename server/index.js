@@ -1,5 +1,6 @@
 const express = require('express');
 const axios = require('axios');
+const cors = require('cors');
 const ec = require('./utils/ec');
 
 const Block = require('./Components/Block');
@@ -24,7 +25,7 @@ let PEER_PORT;
 console.log(process.env.PEER_NUMBER);
 
 
-
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -133,9 +134,13 @@ const getNewestState = async () => {
   }
 };
 
-// Node không phải node chạy đầu tiên
-if (process.env.GENERATE_PORT === 'true') {
-  PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);
+// // Node không phải node chạy đầu tiên
+// if (process.env.GENERATE_PORT === 'true') {
+//   PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);
+// }
+
+if (process.env.PEER_NUMBER) {
+  PEER_PORT = DEFAULT_PORT + parseInt(process.env.PEER_NUMBER);
 }
 
 const PORT = PEER_PORT || DEFAULT_PORT;

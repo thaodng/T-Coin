@@ -10,13 +10,13 @@
     "dev": "concurrently \"yarn run start-redis\" \"yarn run server\"",
     "dev-peer": "cross-env GENERATE_PORT='true' yarn run server",
     "dev-peer-1": "cross-env PEER_NUMBER=1 yarn run server",
-    "dev-peer-2": "cross-env PEER_NUMBER=2 yarn run server",
-    "dev-peer-3": "cross-env PEER_NUMBER=3 yarn run server"
+    "dev-peer-2": "cross-env PEER_NUMBER=2 yarn run server"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.2",
+    "cors": "^2.8.5",
     "crypto-js": "^4.0.0",
     "elliptic": "^6.5.2",
     "express": "^4.17.1",

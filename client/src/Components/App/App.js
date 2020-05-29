@@ -1,25 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { CREATE_WALLET_URL } from '../../config';
 import './App.css';
 
-function App() {  
+const App = () => {
   console.log(process.env);
+  const createWallet = async () => {
+    const { data } = await axios.post(`${CREATE_WALLET_URL}/`);
+    console.log(CREATE_WALLET_URL);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button style={{ width: 50, height: 50 }} onClick={() => createWallet()} >
+        Create wallet
+      </button>
     </div>
   );
 }
