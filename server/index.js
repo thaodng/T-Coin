@@ -17,8 +17,9 @@ const app = express();
 const blockchain = new Blockchain();
 const redis = new Redis({ blockchain, redisUrl: REDIS_URL });
 // blockchain.addNewBlock({ data: 'how are u' });
-
 // console.log(ec.keyFromPrivate("f1a17ae23cffb92c50e3a0ae8dd55984a19ce5af35c5fa14557630ed75025610").getPublic().encode("hex"));
+console.log(process.env.PEER_NUMBER);
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

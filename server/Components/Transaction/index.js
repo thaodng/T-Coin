@@ -12,6 +12,11 @@ class Transaction {
   }
 
   createTxOuts({ sender, recipientAddress, amount }) {
+    // this check may be  a litte bit redundant, 
+    if (amount > sender.balance) {
+      throw new Error('Amount exceeds balance');
+    }
+
     const txOuts = {};
     txOuts[recipientAddress] = amount;
     txOuts[sender.publicKey] = sender.balance - amount;
@@ -23,11 +28,27 @@ class Transaction {
     return {
       timestamp: Date.now(),
       senderAddress: sender.publicKey,
-      amount: sender.balance,
+      amount: sender.balance, // check here later
       signature: sender.sign(txOuts)
     };
   };
 
+  // this.outputMap[senderWallet.publicKey]: balance hiện tại của mình
+  update({ sender, recipient, amount }) {
+    if (amount > this.txOuts[sender.publicKey]) {
+      throw new Error('Amount exceeds balance');
+    }
+
+    // if not exists then create, else plus existing one
+    if (!this.txOuts[recipient]) {
+      this.txOuts[recipient] = amount;
+    } else {
+      this.txOuts[recipient] = this.txOuts[recipient] + amount;
+    }
+
+    this.txOuts[sender.publicKey] -= amount;
+    this.input = this.createInput({ sender, txOuts: this.txOuts });
+  }
 
   static isValid(transaction) {
     const { txIn: { senderAddress, amount, signature }, txOuts } = transaction;
@@ -49,7 +70,7 @@ class Transaction {
   };
 
 
-  
+
 
 };
 
