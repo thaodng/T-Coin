@@ -23,13 +23,26 @@ class TransactionPool {
 
   validTransactions() {
     return Object.values(this.transactionMap).filter(
-      transaction => Transaction.validTransaction(transaction)
+      transaction => Transaction.isValid(transaction)
     );
   }
 
   clear() {
     this.transactionMap = {};
   }
+
+  // clear transactions which haved been recorded in blockchain
+  // we will broadcast this transaction when a new block was mined
+  clearBlockchainTransactions({ chain }) {
+    for (let i = 1; i < chain.length; i++) {
+      const block = chain[i];
+      for (let transaction of block.data) {
+        if (this.transactionMap.hasOwnProperty(transaction.id)) {
+          delete this.transactionMap[transaction.id];
+        };
+      };
+    };
+  };
 }
 
 module.exports = TransactionPool;

@@ -42,7 +42,7 @@ class Wallet {
       const block = chain[i];
 
       for (let transaction of block.data) {
-        if (transaction.txIn.address === address) {
+        if (transaction.txIn.senderAddress === address) {
           hasConductedTransaction = true;
         }
 

@@ -7,6 +7,7 @@ const Blockchain = require('./Components/Blockchain');
 const Wallet = require('./Components/Wallet');
 const Transaction = require('./Components/Transaction');
 const TransactionPool = require('./Components/TransactionPool');
+const Miner = require('./Components/Miner');
 const Redis = require('./redis');
 
 const REDIS_URL = 'redis://127.0.0.1:6379';
@@ -103,6 +104,15 @@ app.post('/create-transaction', (req, res) => {
 
 app.get('/transaction-pool', (req, res) => {
   res.status(200).json({ transactionPool: transactionPool.transactionMap });
+});
+
+app.post('/mine-transactions', (req, res) => {
+  const { minerAddress } = req.body;
+
+  const miner = new Miner({ blockchain, transactionPool, minerAddress, redis });
+  miner.mineTransactions();
+
+  res.redirect('/blockchain');
 });
 
 const getNewestState = async () => {

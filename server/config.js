@@ -14,7 +14,7 @@ const BLOCK_GENERATION_INTERVAL = 3000; // miliseconds
 // for testing purpose
 const STARTED_CAPITAL = 1000;
 
-const REWARD_INPUT = { snderAddress: '**Reward-for-mining-a-new-block**' };
+const REWARD_INPUT = { senderAddress: '**Reward-for-mining-a-new-block**' };
 
 const MINING_REWARD = 50;
 

@@ -15,10 +15,13 @@ class Blockchain {
     this.chain.push(newBlock);
   };
 
-  replaceChain(chain) {
+  replaceChain(chain, clearBlockchainTransactons) {
     if (chain.length <= this.chain.length) return;
 
     if (!Blockchain.isValidChain(chain)) return;
+
+    // broadcast entire network update transaction pool when we replace a newChain
+    if (clearBlockchainTransactons) clearBlockchainTransactons();
 
     this.chain = chain;
   }

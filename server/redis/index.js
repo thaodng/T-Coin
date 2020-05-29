@@ -32,15 +32,19 @@ class Redis {
 
     // we publish JSON type, so we must parse when receive it
     const parsedMessage = JSON.parse(message);
-    console.log(parsedMessage);
+    // console.log(parsedMessage);
 
     switch (channel) {
       case CHANNELS.BLOCKCHAIN:
-        this.blockchain.replaceChain(parsedMessage);
+        this.blockchain.replaceChain(parsedMessage, () => {
+          this.transactionPool.clearBlockchainTransactions({
+            chain: parsedMessage
+          });
+        });
         break;
 
       case CHANNELS.TRANSACTION:
-        this.transactionPool.set(parsedMessage);
+        this.transactionPool.setTransaction(parsedMessage);
         break;
       default:
         return;

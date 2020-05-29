@@ -71,11 +71,11 @@ class Transaction {
   };
 
   // This is special transaction which come from special address (hardcode txIN & txOuts)
-  // we add this transaction after sign
-  static rewardTransaction({ minerWallet }) {
+  // we add this to transaction data after sign
+  static rewardTransaction({ minerAddress }) {
     return new this({
       txIn: REWARD_INPUT,
-      txOuts: { [minerWallet.publicKey]: MINING_REWARD }
+      txOuts: { [minerAddress]: MINING_REWARD }
     });
   }
 
