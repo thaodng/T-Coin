@@ -1,12 +1,14 @@
 const Transaction = require('../Transaction');
 const ec = require('../../utils/ec');
+const cryptoHash = require('../../utils/crypto-hash');
 const { STARTED_CAPITAL } = require('../../config');
 
 class Wallet {
-  constructor({ publicKey }) {
-    this.balance = STARTED_CAPITAL;
-    this.publicKey = publicKey; // only save publicKey(address)
+  constructor({ chain, publicKey }) {
+    this.balance = Wallet.calculateBalance({ chain, address: publicKey });
+    this.publicKey = publicKey; // only save publicKey(address), not save privateKey
   }
+
 
   // sign on hash <-> encrypt data by privateKey
   sign({ data, privateKey }) {
@@ -15,7 +17,7 @@ class Wallet {
   }
 
   // create transaction 
-  createTrasaction({ recipientAddress, amount, chain }) {
+  createTrasaction({ recipientAddress, amount, privateKey, chain }) {
     if (chain) {
       this.balance = Wallet.calculateBalance({
         chain,
@@ -27,7 +29,7 @@ class Wallet {
       throw new Error('Amount exceeds balance');
     }
 
-    return new Transaction({ sender: this, recipientAddress, amount });
+    return new Transaction({ sender: this, senderPrivateKey: privateKey, recipientAddress, amount });
   };
 
 
@@ -57,10 +59,8 @@ class Wallet {
       }
     }
 
-    return hasConductedTransaction ? outputsTotal : STARTING_BALANCE + outputsTotal;
+    return hasConductedTransaction ? outputsTotal : STARTED_CAPITAL + outputsTotal;
   }
-
-
 
 }
 

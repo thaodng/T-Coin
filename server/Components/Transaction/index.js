@@ -1,14 +1,15 @@
 const { v4: uuidv4 } = require('uuid');
 const verifySignature = require('../../utils/verify-signature');
+const { REWARD_INPUT, MINING_REWARD } = require('../../config');
 
 // txOuts === transaction outputs
 // txIn === transaction input
 
 class Transaction {
-  constructor({ sender, recipientAddress, amount, txOuts, txIn }) {
+  constructor({ sender, senderPrivateKey, recipientAddress, amount, txOuts, txIn }) {
     this.id = uuidv4();
     this.txOuts = txOuts || this.createTxOuts({ sender, recipientAddress, amount });
-    this.txIn = txIn || this.createTxIn({ sender, txOuts: this.txOuts });
+    this.txIn = txIn || this.createTxIn({ sender, senderPrivateKey, txOuts: this.txOuts });
   }
 
   createTxOuts({ sender, recipientAddress, amount }) {
@@ -24,12 +25,12 @@ class Transaction {
     return txOuts;
   };
 
-  createTxIn({ sender, txOuts }) {
+  createTxIn({ sender, senderPrivateKey, txOuts }) {
     return {
       timestamp: Date.now(),
       senderAddress: sender.publicKey,
       amount: sender.balance, // check here later
-      signature: sender.sign(txOuts)
+      signature: sender.sign({ data: txOuts, privateKey: senderPrivateKey })
     };
   };
 
@@ -47,7 +48,7 @@ class Transaction {
     }
 
     this.txOuts[sender.publicKey] -= amount;
-    this.input = this.createInput({ sender, txOuts: this.txOuts });
+    this.input = this.createInput({ sender, senderPrivateKey, txOuts: this.txOuts });
   }
 
   static isValid(transaction) {
@@ -69,8 +70,14 @@ class Transaction {
     return true;
   };
 
-
-
+  // This is special transaction which come from special address (hardcode txIN & txOuts)
+  // we add this transaction after sign
+  static rewardTransaction({ minerWallet }) {
+    return new this({
+      txIn: REWARD_INPUT,
+      txOuts: { [minerWallet.publicKey]: MINING_REWARD }
+    });
+  }
 
 };
 

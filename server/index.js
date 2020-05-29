@@ -5,20 +5,23 @@ const ec = require('./utils/ec');
 const Block = require('./Components/Block');
 const Blockchain = require('./Components/Blockchain');
 const Wallet = require('./Components/Wallet');
+const Transaction = require('./Components/Transaction');
+const TransactionPool = require('./Components/TransactionPool');
 const Redis = require('./redis');
 
 const REDIS_URL = 'redis://127.0.0.1:6379';
 const DEFAULT_PORT = 5000;
 const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
-let PEER_PORT;
-let wallet;
 
 const app = express();
 const blockchain = new Blockchain();
-const redis = new Redis({ blockchain, redisUrl: REDIS_URL });
+const transactionPool = new TransactionPool();
+const redis = new Redis({ blockchain, transactionPool, redisUrl: REDIS_URL });
+let PEER_PORT;
 // blockchain.addNewBlock({ data: 'how are u' });
 // console.log(ec.keyFromPrivate("f1a17ae23cffb92c50e3a0ae8dd55984a19ce5af35c5fa14557630ed75025610").getPublic().encode("hex"));
 console.log(process.env.PEER_NUMBER);
+
 
 
 app.use(express.json());
@@ -41,22 +44,80 @@ app.post('/mine-block', (req, res) => {
   res.redirect('/blockchain');
 });
 
-app.get('/create-wallet', (req, res) => {
+app.post('/create-wallet', (req, res) => {
   keyPair = ec.genKeyPair()
   privateKey = keyPair.getPrivate();
   publicKey = keyPair.getPublic().encode('hex');
-  wallet = new Wallet({ publicKey });
 
-  res.status(200).json({ privateKey, address: publicKey });
+  // create wallet with new publicKey
+  const wallet = new Wallet({ chain: blockchain.chain, publicKey });
+
+  res.status(200).json({ wallet, privateKey });
+});
+
+app.post('/wallet-balance', (req, res) => {
+  const { publicKey } = req.body;
+
+  if (!publicKey) {
+    console.log('Please create or using old wallet!');
+  }
+
+  const balance = Wallet.calculateBalance({
+    chain: blockchain.chain,
+    address: publicKey
+  });
+
+  res.status(200).json({ balance });
+});
+
+app.post('/create-transaction', (req, res) => {
+  const { recipientAddress, amount, senderAdress, privateKey } = req.body;
+
+  // create wallet with existing address;
+  const wallet = new Wallet({ chain: blockchain.chain, publicKey: senderAdress });
+
+  let transaction = transactionPool.existingTransaction({ senderAdress });
+
+  try {
+    if (transaction) {
+      transaction.update({ sender: wallet, recipient, amount });
+    } else {
+      transaction = wallet.createTrasaction({
+        recipientAddress,
+        amount,
+        privateKey,
+        chain: blockchain.chain
+      });
+    }
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+
+  transactionPool.setTransaction(transaction);
+
+  redis.broadcastTransaction(transaction);
+
+  res.status(200).json({ transaction });
+
+});
+
+app.get('/transaction-pool', (req, res) => {
+  res.status(200).json({ transactionPool: transactionPool.transactionMap });
 });
 
 const getNewestState = async () => {
   try {
-    const { data } = await axios.get(`${ROOT_NODE_ADDRESS}/blockchain`);
-    const rootChain = data.blockchain;
+    // sync a newest blockchain
+    const blockchainResult = await axios.get(`${ROOT_NODE_ADDRESS}/blockchain`);
+    const rootChain = blockchainResult.data.blockchain;
     blockchain.replaceChain(rootChain);
-    // console.log(blockchain);
-    console.log('Get lastest chain success!!!');
+
+    // sync a newest transaction pool
+    const transactionPoolResult = await axios.get(`${ROOT_NODE_ADDRESS}/transaction-pool`);
+    const rootPool = transactionPoolResult.data.transactionPool;
+    transactionPool.set(rootPool);
+
+    console.log('Get lastest chain & transactions pool success!!!');
   } catch (error) {
     console.log(error);
   }

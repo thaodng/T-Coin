@@ -2,11 +2,13 @@ const redis = require('redis');
 
 const CHANNELS = {
   BLOCKCHAIN: 'BLOCKCHAIN',
+  TRANSACTION: 'TRANSACTION'
 };
 
 class Redis {
-  constructor({ blockchain, redisUrl }) {
+  constructor({ blockchain, transactionPool, redisUrl }) {
     this.blockchain = blockchain;
+    this.transactionPool = transactionPool;
 
     // play both roles publisher and subscriber in application
     this.publisher = redis.createClient(redisUrl);
@@ -27,11 +29,22 @@ class Redis {
 
   handleMessage(channel, message) {
     console.log(`Received message from channel: ${channel}`);
-    
+
     // we publish JSON type, so we must parse when receive it
     const parsedMessage = JSON.parse(message);
+    console.log(parsedMessage);
 
-    this.blockchain.replaceChain(parsedMessage);
+    switch (channel) {
+      case CHANNELS.BLOCKCHAIN:
+        this.blockchain.replaceChain(parsedMessage);
+        break;
+
+      case CHANNELS.TRANSACTION:
+        this.transactionPool.set(parsedMessage);
+        break;
+      default:
+        return;
+    }
   }
 
 
@@ -40,6 +53,13 @@ class Redis {
     this.publish({
       channel: CHANNELS.BLOCKCHAIN,
       message: JSON.stringify(this.blockchain.chain) // only publish a string
+    });
+  }
+
+  broadcastTransaction(transaction) {
+    this.publish({
+      channel: CHANNELS.TRANSACTION,
+      message: JSON.stringify(transaction)
     });
   }
 
