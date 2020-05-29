@@ -71,21 +71,21 @@ app.post('/wallet-balance', (req, res) => {
 });
 
 app.post('/create-transaction', (req, res) => {
-  const { recipientAddress, amount, senderAdress, privateKey } = req.body;
+  const { recipientAddress, amount, senderAddress, senderPrivateKey } = req.body;
 
   // create wallet with existing address;
-  const wallet = new Wallet({ chain: blockchain.chain, publicKey: senderAdress });
+  const wallet = new Wallet({ chain: blockchain.chain, publicKey: senderAddress });
 
-  let transaction = transactionPool.existingTransaction({ senderAdress });
+  let transaction = transactionPool.existingTransaction({ senderAddress });
 
   try {
     if (transaction) {
-      transaction.update({ sender: wallet, recipient, amount });
+      transaction.update({ sender: wallet, senderPrivateKey, recipientAddress, amount });
     } else {
       transaction = wallet.createTrasaction({
         recipientAddress,
         amount,
-        privateKey,
+        senderPrivateKey,
         chain: blockchain.chain
       });
     }

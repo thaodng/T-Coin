@@ -15,10 +15,10 @@ class TransactionPool {
     this.transactionMap[transaction.id] = transaction;
   }
 
-  existingTransaction({ senderAdress }) {
+  existingTransaction({ senderAddress }) {
     const transactions = Object.values(this.transactionMap);
 
-    return transactions.find(transaction => transaction.txIn.address === senderAdress);
+    return transactions.find(transaction => transaction.txIn.senderAddress === senderAddress);
   }
 
   validTransactions() {

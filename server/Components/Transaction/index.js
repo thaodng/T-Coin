@@ -35,20 +35,20 @@ class Transaction {
   };
 
   // this.outputMap[senderWallet.publicKey]: balance hiện tại của mình
-  update({ sender, recipient, amount }) {
+  update({ sender, senderPrivateKey, recipientAddress, amount }) {
     if (amount > this.txOuts[sender.publicKey]) {
       throw new Error('Amount exceeds balance');
     }
 
     // if not exists then create, else plus existing one
-    if (!this.txOuts[recipient]) {
-      this.txOuts[recipient] = amount;
+    if (!this.txOuts[recipientAddress]) {
+      this.txOuts[recipientAddress] = amount;
     } else {
-      this.txOuts[recipient] = this.txOuts[recipient] + amount;
+      this.txOuts[recipientAddress] = this.txOuts[recipientAddress] + amount;
     }
 
     this.txOuts[sender.publicKey] -= amount;
-    this.input = this.createInput({ sender, senderPrivateKey, txOuts: this.txOuts });
+    this.txIn = this.createTxIn({ sender, senderPrivateKey, txOuts: this.txOuts });
   }
 
   static isValid(transaction) {
