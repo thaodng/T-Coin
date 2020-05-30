@@ -134,10 +134,10 @@ const getNewestState = async () => {
   }
 };
 
-// // Node không phải node chạy đầu tiên
-// if (process.env.GENERATE_PORT === 'true') {
-//   PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);
-// }
+// Node không phải node chạy đầu tiên
+if (process.env.GENERATE_PORT === 'true') {
+  PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);
+}
 
 if (process.env.PEER_NUMBER) {
   PEER_PORT = DEFAULT_PORT + parseInt(process.env.PEER_NUMBER);

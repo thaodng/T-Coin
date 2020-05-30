@@ -5,10 +5,9 @@ const CREATE_WALLET_URL = `${API_BASE_URL}/create-wallet`;
 const GET_WALLET_BALANCE_URL = `${API_BASE_URL}/wallet-balance`;
 const CREATE_TRANSACTION = `${API_BASE_URL}/create-transaction`;
 const GET_TRANSACTION_POOL_URL = `${API_BASE_URL}/transaction-pool`;
-const CREATE_BLOCK = `${API_BASE_URL}/mine-transaction`;
+const MINE_BLOCK = `${API_BASE_URL}/mine-transactions`;
 
-const MILLISECONDS_JS = 1;
-const SECONDS_JS = MILLISECONDS_JS * 1000;
+const SECONDS_JS =  1000;
 
 export {
   API_BASE_URL,
@@ -17,6 +16,6 @@ export {
   GET_WALLET_BALANCE_URL,
   CREATE_TRANSACTION,
   GET_TRANSACTION_POOL_URL,
-  CREATE_BLOCK,
+  MINE_BLOCK,
   SECONDS_JS
 };
