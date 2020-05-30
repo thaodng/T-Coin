@@ -89,6 +89,9 @@ const App = () => {
   const mineBlock = async ({ minerAddress }) => {
     const { data: blockchain } = await axios.post(`${MINE_BLOCK}`, { minerAddress });
     setBlockchain(blockchain);
+
+    // re-calculate balance 
+    getWalletBalance({ publicKey: minerAddress });
     console.log(blockchain);
     // go to blockchain UI
   };
