@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Tabs, Layout } from 'antd';
+import { Layout, Tabs, Button, Modal, message } from 'antd';
 import {
   WalletOutlined,
   TransactionOutlined,
@@ -115,6 +115,7 @@ const App = () => {
             defaultActiveKey="1" >
             <TabPane tab={<span><WalletOutlined style={{ fontSize: '16px' }} /> Wallet</span>} key="1">
               <Wallet
+                walletInfo={walletInfo}
                 onCreateWallet={() => createWallet()}
                 onGetWalletBalance={() => getWalletBalance({ publicKey: walletInfo.publicKey })}
                 onCreateTransaction={() => createTransaction({
@@ -138,7 +139,7 @@ const App = () => {
           </Tabs>
         </div>
       </Content>
-      <Footer>Simple cryptocurrency</Footer>
+      {/* <Footer>Simple cryptocurrency</Footer> */}
     </Layout >
   );
 }
