@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Tabs, Layout } from 'antd';
 import axios from 'axios';
+import {
+  WalletOutlined,
+  TransactionOutlined,
+  RadarChartOutlined
+} from '@ant-design/icons';
 import {
   GET_BLOCKCHAIN_URL,
   CREATE_WALLET_URL,
@@ -9,8 +15,13 @@ import {
   MINE_BLOCK,
   SECONDS_JS
 } from '../../config';
+import logo from '../../assets/images/logo.png';
 
+import 'antd/dist/antd.css';
 import './App.css';
+
+const { Header, Content, Footer } = Layout;
+const { TabPane } = Tabs;
 
 /* 
  *walletInfo: balance, publicKey
@@ -96,26 +107,34 @@ const App = () => {
     // go to blockchain UI
   };
 
-  console.log(walletInfo);
+  // console.log(walletInfo); 
   return (
-    <div className="App" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <button style={{ width: 100, height: 100 }} onClick={() => createWallet()} >
-        Create wallet
-      </button>
-      <button style={{ width: 100, height: 100 }} onClick={() => getWalletBalance({ publicKey: walletInfo.publicKey })} >
-        Get wallet balance
-      </button>
-      <button style={{ width: 100, height: 100 }} onClick={() => createTransaction({
-        recipientAddress: recipientAddress,
-        amount: amount,
-        senderPrivateKey: '5c359bc01562813fc348622a9027c89432758c2e6f481b0490b8347edcc649fc'
-      })} >
-        Create transaction
-      </button>
-      <button style={{ width: 100, height: 100 }} onClick={() => mineBlock({ minerAddress: walletInfo.publicKey })} >
-        Mine new block
-      </button>
-    </div>
+    <Layout style={{ height: '100vh' }}>
+      <Header className="Header">
+        <img className="logo" src={logo} alt="logo" />
+        <h3 style={{ marginTop: '15px', marginLeft: '20px' }}>Cryptocurrency wallet for my coin</h3>
+      </Header>
+      <Content className="App">
+        <div className="App">
+          <Tabs
+            style={{ padding: '16px' }}
+            defaultActiveKey="1" >
+            <TabPane tab={<span><WalletOutlined style={{fontSize: '16px'}} /> Wallet</span>} key="1">
+              {/* <WalletsContent /> */}
+            </TabPane>
+            <TabPane tab={<span><TransactionOutlined style={{ fontSize: '16px' }}/>Transaction pool</span>} key="2">
+              Content of Tab Pane 2
+            </TabPane>
+            <TabPane tab={<span><RadarChartOutlined style={{ fontSize: '16px' }} />Blockhain network</span>} key="3">
+              Content of Tab Pane 3
+            </TabPane>
+          </Tabs>
+        </div>
+
+
+      </Content>
+      <Footer>Simple cryptocurrency</Footer>
+    </Layout >
   );
 }
 
