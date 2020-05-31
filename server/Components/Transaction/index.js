@@ -57,13 +57,13 @@ class Transaction {
     // total money before send === total money of recipients + money of sender
     const totalMoney = Object.values(txOuts).reduce((total, outputAmount) => total + outputAmount);
     if (amount !== totalMoney) {
-      console.error(`Invalid transaction from ${address}`);
+      console.error(`Invalid transaction from ${senderAddress}`);
       return false;
     }
 
     // verify signature
     if (!verifySignature({ publicKey: senderAddress, data: txOuts, signature })) {
-      console.error(`Invalid transaction from ${address}`);
+      console.error(`Invalid transaction from ${senderAddress}`);
       return false;
     }
 

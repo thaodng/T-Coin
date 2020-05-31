@@ -12,6 +12,7 @@ import logo from '../../assets/images/logo.png';
 import Wallet from '../Wallet/Wallet';
 import TransactionPool from '../TransactionPool/TransactionPool';
 import Blockchain from '../Blockchain/Blockchain';
+
 import {
   GET_BLOCKCHAIN_URL,
   CREATE_WALLET_URL,

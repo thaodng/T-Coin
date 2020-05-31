@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Modal, message } from 'antd';
+import { Table, Button, Modal, Badge, message } from 'antd';
 import { DownSquareOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons'
 import { SearchOutlined } from '@ant-design/icons';
 import ImportForm from '../Form/ImportForm';
@@ -27,13 +27,35 @@ const Wallet = ({ walletInfo, onCreateWallet, onGetWalletBalance, onCreateTransa
     setShowCreateTxModel(false);
   };
 
+
+  const data = [
+    {
+      address: "04a40e5847b0b3d5ea40d8aa178e9815ec0dabb1e53037bf47c6fdaf9cd5b7b6791efe255305b258b00852950a56cf412a70cfa8f2c1e10e782a3d697a76788112",
+      amount: 100,
+    },
+    {
+      address: "047b6041b26b6bee8740708a2b0774ccd2ff11608496a708ab735ca8ca03f79760df9a1d7323c55630c3de7cf43da6cd0d5b626bca9e2019860f0f874e224333ef",
+      amount: 900
+    },
+    {
+      address: "047b6041b26b6bee8740708a2b0774ccd2ff11608496a708ab735ca8ca03f79760df9a1d7323c55630c3de7cf43da6cd0d5b626bca9e2019860f0f874e224333ef",
+      amount: 900
+    },
+    {
+      address: "047b6041b26b6bee8740708a2b0774ccd2ff11608496a708ab735ca8ca03f79760df9a1d7323c55630c3de7cf43da6cd0d5b626bca9e2019860f0f874e224333ef",
+      amount: 900
+    },
+  ]
+
   const columns = [
     {
-      title: 'Address', key: 'address', dataIndex: 'address'
+      title: 'Recipient address', key: 'address', dataIndex: 'address'
     },
-    { title: 'Tcoins', key: 'coins', dataIndex: 'coin' },
+    { title: 'Amount', key: 'amount', dataIndex: 'amount' },
     {
-      title: 'Status', key: 'status', dataIndex: 'true'
+      title: 'Status', key: 'status', render: (text, record) => (
+        <Badge status="processing" text="processing" />
+      ),
     },
   ];
 
@@ -86,7 +108,7 @@ const Wallet = ({ walletInfo, onCreateWallet, onGetWalletBalance, onCreateTransa
 
       <Table
         columns={columns}
-        dataSource={[walletInfo]}
+        dataSource={data}
         pagination={false}
         style={{ height: '300px', backgroundColor: 'white' }} />
       <Modal
