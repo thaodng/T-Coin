@@ -123,7 +123,7 @@ const Wallet = ({ walletInfo, onCreateWallet, onGetWalletBalance, onCreateTransa
 
 
       <div style={{ marginTop: '24px' }}>
-        <h5>Total: {`${formatAmount(walletInfo.balance * price)}`}</h5>
+        <h3>Total: {`${formatAmount(walletInfo.balance * price)}`}</h3>
         <span>{`(at ${formatAmount(price)} per T-Coin)`}</span>
       </div>
     </div>

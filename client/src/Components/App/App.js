@@ -107,7 +107,7 @@ const App = () => {
     <Layout className="ant-layout">
       <Header className="Header">
         <img className="logo" src={logo} alt="logo" />
-        <h3 style={{ marginTop: '15px', marginLeft: '20px' }}>Cryptocurrency wallet for my coin</h3>
+        <h3 >Cryptocurrency wallet for my coin</h3>
       </Header>
       <Content className="App">
         <div className="App">
