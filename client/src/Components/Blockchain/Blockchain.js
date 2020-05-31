@@ -1,23 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import React from 'react';
 
-import {
-  GET_BLOCKCHAIN_URL
-} from '../../config';
+const Blockchain = ({ blockchain }) => {
 
-const Blockchain = props => {
-  // get blockchain network
-  const [blockchain, setBlockchain] = useState([]);
-  
-  const getBlockchain = async () => {
-    const { data: { blockchain } } = await axios.get(`${GET_BLOCKCHAIN_URL}`);
-    setBlockchain(blockchain);
-  };
-
-  useEffect(() => {
-    getBlockchain();
-  }, [])
-
+  console.log(blockchain)
   return (
     <div>
       Blockchain
