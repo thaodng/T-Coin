@@ -5,6 +5,7 @@ import 'antd/dist/antd.css';
 import './index.css';
 import App from './Components/App/App';
 import TransactionInBlock from './Components/TransactionsInBlock/TransactionInBlock';
+import CreateSuccess from './Components/Wallet/CreateSuccess';
 import * as serviceWorker from './serviceWorker';
 
 
@@ -14,6 +15,7 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/" component={App} />
         <Route exact path="/transactions" component={TransactionInBlock} />
+        <Route exact path="/create-success" component={CreateSuccess} />
       </Switch>
     </Router>
   </React.StrictMode>,

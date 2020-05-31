@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Layout, Tabs, Button, Modal, message } from 'antd';
+import { Layout, Tabs } from 'antd';
 import {
   WalletOutlined,
   TransactionOutlined,
   RadarChartOutlined
 } from '@ant-design/icons';
 
-import './App.css';
-import logo from '../../assets/images/logo.png';
+import CryptoLayout from '../CryptoLayout/CryptoLayout';
 import Wallet from '../Wallet/Wallet';
 import TransactionPool from '../TransactionPool/TransactionPool';
 import Blockchain from '../Blockchain/Blockchain';
@@ -23,7 +22,6 @@ import {
   SECONDS_JS
 } from '../../config';
 
-const { Header, Content, Footer } = Layout;
 const { TabPane } = Tabs;
 
 const App = () => {
@@ -104,44 +102,37 @@ const App = () => {
 
   console.log(walletInfo);
   return (
-    <Layout className="ant-layout">
-      <Header className="Header">
-        <img className="logo" src={logo} alt="logo" />
-        <h3 >Cryptocurrency wallet for my coin</h3>
-      </Header>
-      <Content className="App">
-        <div className="App">
-          <Tabs
-            style={{ padding: '16px' }}
-            defaultActiveKey="3" >
-            <TabPane tab={<span><WalletOutlined style={{ fontSize: '16px' }} /> Wallet</span>} key="1">
-              <Wallet
-                walletInfo={walletInfo}
-                onCreateWallet={() => createWallet()}
-                onGetWalletBalance={() => getWalletBalance({ publicKey: walletInfo.publicKey })}
-                onCreateTransaction={() => createTransaction({
-                  recipientAddress: recipientAddress,
-                  amount: amount,
-                  senderPrivateKey: '5c359bc01562813fc348622a9027c89432758c2e6f481b0490b8347edcc649fc'
-                })}
-              />
-            </TabPane>
-            <TabPane tab={<span><TransactionOutlined style={{ fontSize: '16px' }} />Transaction pool</span>} key="2">
-              <TransactionPool
-                transactions={transactions}
-                onMineBlock={() => mineBlock({ minerAddress: walletInfo.publicKey })}
-              />
-            </TabPane>
-            <TabPane tab={<span><RadarChartOutlined style={{ fontSize: '16px' }} />Blockhain network</span>} key="3">
-              <Blockchain
-                blockchain={blockchain}
-              />
-            </TabPane>
-          </Tabs>
-        </div>
-      </Content>
-      {/* <Footer>Simple cryptocurrency</Footer> */}
-    </Layout >
+    <CryptoLayout >
+      <div >
+        <Tabs
+          style={{ padding: '16px' }}
+          defaultActiveKey="3" >
+          <TabPane tab={<span><WalletOutlined style={{ fontSize: '16px' }} /> Wallet</span>} key="1">
+            <Wallet
+              walletInfo={walletInfo}
+              onCreateWallet={() => createWallet()}
+              onGetWalletBalance={() => getWalletBalance({ publicKey: walletInfo.publicKey })}
+              onCreateTransaction={() => createTransaction({
+                recipientAddress: recipientAddress,
+                amount: amount,
+                senderPrivateKey: '5c359bc01562813fc348622a9027c89432758c2e6f481b0490b8347edcc649fc'
+              })}
+            />
+          </TabPane>
+          <TabPane tab={<span><TransactionOutlined style={{ fontSize: '16px' }} />Transaction pool</span>} key="2">
+            <TransactionPool
+              transactions={transactions}
+              onMineBlock={() => mineBlock({ minerAddress: walletInfo.publicKey })}
+            />
+          </TabPane>
+          <TabPane tab={<span><RadarChartOutlined style={{ fontSize: '16px' }} />Blockhain network</span>} key="3">
+            <Blockchain
+              blockchain={blockchain}
+            />
+          </TabPane>
+        </Tabs>
+      </div>
+    </CryptoLayout>
   );
 }
 

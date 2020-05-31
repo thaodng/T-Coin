@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, Button, Modal, Badge, message } from 'antd';
 import { DownSquareOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons'
-import { SearchOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router-dom';
 import ImportForm from '../Form/ImportForm';
 import CreateTransactionForm from '../Form/CreateTransactionForm';
 
@@ -9,6 +9,8 @@ const price = 1;
 
 /* walletInfo: balance, publicKey */
 const Wallet = ({ walletInfo, onCreateWallet, onGetWalletBalance, onCreateTransaction }) => {
+  const history = useHistory();
+
   const [showImportModel, setShowImportModel] = useState(false);
   const [showCreateTxModel, setShowCreateTxModel] = useState(false);
 
@@ -27,6 +29,10 @@ const Wallet = ({ walletInfo, onCreateWallet, onGetWalletBalance, onCreateTransa
     setShowCreateTxModel(false);
   };
 
+  const createWallet = () => {
+    history.push('/create-success');
+    onCreateWallet();
+  }
 
   const data = [
     {
@@ -82,7 +88,7 @@ const Wallet = ({ walletInfo, onCreateWallet, onGetWalletBalance, onCreateTransa
           type="primary"
           icon={<PlusCircleOutlined />}
           style={{ marginLeft: '8px' }}
-          onClick={onCreateWallet}>Create wallet
+          onClick={createWallet}>Create wallet
         </Button>
         <Button
           type="primary"

@@ -1,18 +1,15 @@
 import React from 'react'
-import { useHistory } from "react-router-dom";
+import CryptoLayout from '../CryptoLayout/CryptoLayout';
+import Transaction from '../Transaction/Transaction';
 
 const TransactionInBlock = () => {
-  let history = useHistory();
-
-  const handleClick = () => {
-    history.push('/');
-  }
+  const data = Array(10).fill(0);
 
   return (
-    <button type="button" onClick={handleClick}>
-      Go blockchain page
-    </button>
-  )
-}
+    <CryptoLayout>
+      {data.map(item => <Transaction />)}
+    </CryptoLayout>
+  );
+};
 
 export default TransactionInBlock;
