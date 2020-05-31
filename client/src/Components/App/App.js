@@ -113,7 +113,7 @@ const App = () => {
         <div className="App">
           <Tabs
             style={{ padding: '16px' }}
-            defaultActiveKey="1" >
+            defaultActiveKey="3" >
             <TabPane tab={<span><WalletOutlined style={{ fontSize: '16px' }} /> Wallet</span>} key="1">
               <Wallet
                 walletInfo={walletInfo}

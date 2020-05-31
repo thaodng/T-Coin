@@ -1,6 +1,6 @@
 import React from 'react'
 import { Descriptions, Button } from 'antd';
-
+import { Link } from 'react-router-dom';
 const Block = () => {
 
   return (
@@ -13,8 +13,11 @@ const Block = () => {
         <Descriptions.Item span="3" label="Mined by">That miner</Descriptions.Item>
         <Descriptions.Item span="3" label="Reward for miner"> 100 Tcoins </Descriptions.Item>
         <Descriptions.Item span="3" label="Transactions">100 Transactions</Descriptions.Item>
+        <Descriptions.Item span="3">
+          <Link to="/transactions">Show detail transactions in this block</Link>
+        </Descriptions.Item>
       </Descriptions>
-      <Button type="primary" style={{ marginTop: '12px' }} block onClick={() => { console.log('a') }}>Show detail transactions in this block</Button>
+      {/* <Button type="primary" style={{ marginTop: '12px' }} block onClick={() => { console.log('a') }}>Show detail transactions in this block</Button> */}
     </>
   )
 };

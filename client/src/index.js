@@ -1,14 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import './index.css';
 import App from './Components/App/App';
+import TransactionInBlock from './Components/TransactionsInBlock/TransactionInBlock';
 import * as serviceWorker from './serviceWorker';
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <Switch>
+        <Route exact path="/" component={App} />
+        <Route exact path="/transactions" component={TransactionInBlock} />
+      </Switch>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
