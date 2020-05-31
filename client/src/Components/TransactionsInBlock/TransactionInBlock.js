@@ -2,12 +2,11 @@ import React from 'react'
 import CryptoLayout from '../CryptoLayout/CryptoLayout';
 import Transaction from '../Transaction/Transaction';
 
-const TransactionInBlock = () => {
-  const data = Array(10).fill(0);
-
+const TransactionInBlock = (props) => {
+  const { transactions } = props.location.state;
   return (
     <CryptoLayout>
-      {data.map(item => <Transaction />)}
+        {transactions.map(transaction => <Transaction transactionData={transaction} />)}
     </CryptoLayout>
   );
 };

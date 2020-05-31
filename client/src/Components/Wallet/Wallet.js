@@ -1,57 +1,87 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Table, Button, Modal, Badge, message } from 'antd';
-import { DownSquareOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons'
+import { DownSquareOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import ImportForm from '../Form/ImportForm';
 import CreateTransactionForm from '../Form/CreateTransactionForm';
 
+import {
+  GET_WALLET_BALANCE_URL,
+  CREATE_TRANSACTION,
+} from '../../config';
+
 const price = 1;
 
 /* walletInfo: balance, publicKey */
-const Wallet = ({ walletInfo, onCreateWallet, onGetWalletBalance, onCreateTransaction }) => {
+const Wallet = ({ walletInfo, setWalletInfo }) => {
   const history = useHistory();
+  const [publicKey, setPublicKey] = useState('');
 
   const [showImportModel, setShowImportModel] = useState(false);
+  // get wallet balance === login
+  const getWallet = async ({ publicKey }) => {
+    const { data: { balance } } = await axios.post(`${GET_WALLET_BALANCE_URL}/`, { publicKey });
+    const wallet = { publicKey, balance };
+    setWalletInfo(wallet);
+  };
+
+  const handleImport = (e) => {
+    e.preventDefault();
+    setShowImportModel(false);
+    getWallet({ publicKey });
+    message.info('Import public key success');
+  };
+
+  const handleCancelImport = () => {
+    setShowImportModel(false);
+  }
+
   const [showCreateTxModel, setShowCreateTxModel] = useState(false);
+  const [recipientAddress, setRecipientAddress] = useState('');
+  const [amount, setAmount] = useState(0);
+  const [senderPrivateKey, setSenderPrivateKey] = useState('');
+  const [dataTransactions, setDataTransactions] = useState([]);
 
-  const handleReload = () => {
+  const createTransaction = async ({ recipientAddress, amount, senderPrivateKey }) => {
+    const { data: { transaction } } = await axios
+      .post(`${CREATE_TRANSACTION}/`, {
+        recipientAddress,
+        amount,
+        senderAddress: walletInfo.publicKey,
+        senderPrivateKey
+      });
 
+    const recipients = Object.keys(transaction.txOuts);
+    const transactions = recipients
+      .map(recipient => {
+        return {
+          address: recipient,
+          amount: transaction.txOuts[recipient]
+        }
+      });
+
+    console.log(transactions);
+    setDataTransactions(dataTrans => dataTrans.concat(transactions));
+    // we call get transaction-pool every x - seconds, so in the future, using socket.io here
   };
 
   const handleCreate = (e) => {
     e.preventDefault();
-    setShowImportModel(false);
     setShowCreateTxModel(false);
+    createTransaction({
+      recipientAddress,
+      amount,
+      senderAddress: walletInfo.publicKey,
+      senderPrivateKey
+    });
+    message.info('Create transaction success');
+
   };
 
   const handleCancel = () => {
-    setShowImportModel(false);
     setShowCreateTxModel(false);
   };
-
-  const createWallet = () => {
-    history.push('/create-success');
-    onCreateWallet();
-  }
-
-  const data = [
-    {
-      address: "04a40e5847b0b3d5ea40d8aa178e9815ec0dabb1e53037bf47c6fdaf9cd5b7b6791efe255305b258b00852950a56cf412a70cfa8f2c1e10e782a3d697a76788112",
-      amount: 100,
-    },
-    {
-      address: "047b6041b26b6bee8740708a2b0774ccd2ff11608496a708ab735ca8ca03f79760df9a1d7323c55630c3de7cf43da6cd0d5b626bca9e2019860f0f874e224333ef",
-      amount: 900
-    },
-    {
-      address: "047b6041b26b6bee8740708a2b0774ccd2ff11608496a708ab735ca8ca03f79760df9a1d7323c55630c3de7cf43da6cd0d5b626bca9e2019860f0f874e224333ef",
-      amount: 900
-    },
-    {
-      address: "047b6041b26b6bee8740708a2b0774ccd2ff11608496a708ab735ca8ca03f79760df9a1d7323c55630c3de7cf43da6cd0d5b626bca9e2019860f0f874e224333ef",
-      amount: 900
-    },
-  ]
 
   const columns = [
     {
@@ -88,51 +118,59 @@ const Wallet = ({ walletInfo, onCreateWallet, onGetWalletBalance, onCreateTransa
           type="primary"
           icon={<PlusCircleOutlined />}
           style={{ marginLeft: '8px' }}
-          onClick={createWallet}>Create wallet
+          onClick={() => history.push('/create-success')}>Create wallet
         </Button>
-        <Button
-          type="primary"
-          icon={<PlusCircleOutlined />}
-          style={{ marginLeft: '8px' }}
-          onClick={() => setShowCreateTxModel(true)}>Create transaction
-        </Button>
-        <Button
-          type="primary"
-          icon={<ReloadOutlined />}
-          shape="circle"
-          style={{ marginLeft: '8px' }}
-          onClick={onGetWalletBalance} />
+        {
+          walletInfo.publicKey && (
+            <>
+              <Button
+                type="primary"
+                icon={<PlusCircleOutlined />}
+                style={{ marginLeft: '8px' }}
+                onClick={() => setShowCreateTxModel(true)}>Create transaction
+            </Button>
+              <Button
+                type="primary"
+                icon={<ReloadOutlined />}
+                shape="circle"
+                style={{ marginLeft: '8px' }}
+                onClick={() => getWallet({ publicKey })} />
+            </>
+          )
+        }
       </div>
       <Modal
         title="Import Wallet"
         visible={showImportModel}
-        okText="Create"
-        onCancel={handleCancel}
-        onOk={handleCreate}>
-        <ImportForm />
+        okText="Import"
+        onCancel={handleCancelImport}
+        onOk={handleImport}>
+        <ImportForm setPublicKey={setPublicKey} />
       </Modal>
-
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={false}
-        style={{ height: '300px', backgroundColor: 'white' }} />
       <Modal
         title="Send Money"
         visible={showCreateTxModel}
         okText="Send"
         onCancel={handleCancel}
-        confirmLoading={handleReload}
-        onOk={handleCreate}>
-        <CreateTransactionForm />
+        onOk={handleCreate}
+      >
+        <CreateTransactionForm setRecipientAddress={setRecipientAddress} setAmount={setAmount} setSenderPrivateKey={setSenderPrivateKey} />
       </Modal>
 
-
-      <div style={{ marginTop: '24px' }}>
-        <h3>Total: {`${formatAmount(walletInfo.balance * price)}`}</h3>
-        <span>{`(at ${formatAmount(price)} per T-Coin)`}</span>
-      </div>
-    </div>
+      <Table
+        columns={columns}
+        dataSource={dataTransactions}
+        pagination={false}
+        style={{ height: '300px', backgroundColor: 'white' }}
+      />
+      {walletInfo.balance && (
+        <div style={{ marginTop: '24px' }}>
+          <h3>Address: {walletInfo.publicKey}</h3>
+          <h3>Total: {`${formatAmount(walletInfo.balance * price)}`}</h3>
+          <span>{`(at ${formatAmount(price)} per T-Coin)`}</span>
+        </div>
+      )}
+    </div >
   )
 }
 

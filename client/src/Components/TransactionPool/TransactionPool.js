@@ -1,31 +1,42 @@
-import React from 'react'
-import { Table, Button } from 'antd';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Table, Button, message } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons'
 import Transaction from '../Transaction/Transaction';
+import {
+  MINE_BLOCK,
+  GET_WALLET_BALANCE_URL
+} from '../../config';
 
-const TransactionPool = ({ transactions, onMineBlock }) => {
-  console.log(transactions);
+const TransactionPool = ({ walletInfo, setWalletInfo, setBlockchain, transactions }) => {
+  const [currentSelect, setCurrentSelect] = useState({});
 
-  const data = [
-    {
-      id: 'c988e0ae-4638-413c-b7a9-4516f333430a',
-      timestamp: '2018-04-24 18:00:00',
-      senderAddress: "044edd95ed815bdfa329c9ab78cf40d8612fd062ff9333b5c6d4a098bb867c93e80dad39b582ff1b5bb1f26c0143a5106186de8f3efba0a1e36d6fbb3e6b946189".slice(0, 64) + "...",
-      amount: 10000,
-    },
-    {
-      id: 'c988e0ae-4638-413c-b7a9-4516f333430a',
-      timestamp: '2018-04-24 18:00:00',
-      senderAddress: "044edd95ed815bdfa329c9ab78cf40d8612fd062ff9333b5c6d4a098bb867c93e80dad39b582ff1b5bb1f26c0143a5106186de8f3efba0a1e36d6fbb3e6b946189".slice(0, 64) + "...",
-      amount: 10000,
-    },
-    {
-      id: 'c988e0ae-4638-413c-b7a9-4516f333430a',
-      timestamp: '2018-04-24 18:00:00',
-      senderAddress: "044edd95ed815bdfa329c9ab78cf40d8612fd062ff9333b5c6d4a098bb867c93e80dad39b582ff1b5bb1f26c0143a5106186de8f3efba0a1e36d6fbb3e6b946189".slice(0, 64) + "...",
-      amount: 10000,
-    },
-  ];
+  // mine transactions === mine a new block (in this project)
+  const onMineBlock = async () => {
+    const { data: blockchain } = await axios.post(`${MINE_BLOCK}`, { minerAddress: walletInfo.publicKey });
+    // re-calculate balance 
+    getWalletBalance({ publicKey: walletInfo.publicKey });
+    // setBlockchain(blockchain);
+    console.log(blockchain);
+    message.info('Mine a new block success');
+
+  };
+
+  const getWalletBalance = async ({ publicKey }) => {
+    const { data: { balance } } = await axios.post(`${GET_WALLET_BALANCE_URL}/`, { publicKey });
+    const wallet = { publicKey, balance };
+    setWalletInfo(wallet);
+  };
+
+  const transactionsData = Object.keys(transactions)
+    .map(transactionId => {
+      return {
+        id: transactions[transactionId].id,
+        timestamp: new Date(transactions[transactionId].txIn.timestamp).toLocaleString(),
+        senderAddress: `${transactions[transactionId].txIn.senderAddress.slice(0, 64)}....`,
+        amount: transactions[transactionId].txIn.amount,
+      }
+    });
 
   const columns = [
     {
@@ -40,7 +51,7 @@ const TransactionPool = ({ transactions, onMineBlock }) => {
     },
     {
       title: 'Action', key: 'action', render: (text, record) => (
-        <Button type="primary" onClick={() => { console.log('a') }}>View detail</Button>
+        <Button type="primary" onClick={() => { setCurrentSelect(transactions[record.id]) }}>View detail</Button>
       ),
     },
   ];
@@ -49,17 +60,21 @@ const TransactionPool = ({ transactions, onMineBlock }) => {
     <div>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={transactionsData}
         pagination={false}
         style={{ height: '370px', backgroundColor: 'white' }} />
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '12px', marginBottom: '12px' }}>
-        <Button
-          type="primary"
-          icon={<PlusCircleOutlined />}
-          onClick={onMineBlock}>Mine transactions
-        </Button>
+        {
+          walletInfo.publicKey && (
+            <Button
+              type="primary"
+              icon={<PlusCircleOutlined />}
+              onClick={onMineBlock}>Mine transactions
+            </Button>
+          )
+        }
       </div>
-      {<Transaction />}
+      {currentSelect.id && <Transaction transactionData={currentSelect} />}
     </div>
   );
 };

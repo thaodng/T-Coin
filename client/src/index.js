@@ -14,8 +14,8 @@ ReactDOM.render(
     <Router>
       <Switch>
         <Route exact path="/" component={App} />
-        <Route exact path="/transactions" component={TransactionInBlock} />
         <Route exact path="/create-success" component={CreateSuccess} />
+        <Route exact path="/transactions" component={TransactionInBlock} />
       </Switch>
     </Router>
   </React.StrictMode>,
