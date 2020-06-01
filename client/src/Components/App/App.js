@@ -27,6 +27,8 @@ const App = () => {
 
   // create wallet === create account
   const [walletInfo, setWalletInfo] = useState({});
+  const [dataWalletTransactions, setDataWalletTransactions] = useState([]);
+
 
   const getBlockchain = async () => {
     const { data: { blockchain } } = await axios.get(`${GET_BLOCKCHAIN_URL}`);
@@ -57,12 +59,18 @@ const App = () => {
           style={{ padding: '16px' }}
         >
           <TabPane tab={<span><WalletOutlined style={{ fontSize: '16px' }} /> Wallet</span>} key="1">
-            <Wallet walletInfo={walletInfo} setWalletInfo={setWalletInfo} />
+            <Wallet
+              walletInfo={walletInfo}
+              setWalletInfo={setWalletInfo}
+              dataWalletTransactions={dataWalletTransactions}
+              setDataWalletTransactions={setDataWalletTransactions}
+            />
           </TabPane>
           <TabPane tab={<span><TransactionOutlined style={{ fontSize: '16px' }} />Transaction pool</span>} key="2">
             <TransactionPool
               walletInfo={walletInfo}
               setWalletInfo={setWalletInfo}
+              setDataWalletTransactions={setDataWalletTransactions}
               setBlockchain={setBlockchain}
               transactions={transactions}
             />

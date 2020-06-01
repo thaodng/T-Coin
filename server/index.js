@@ -82,11 +82,11 @@ app.post('/create-transaction', (req, res) => {
 
   try {
     if (transaction) {
-      transaction.update({ sender: wallet, senderPrivateKey, recipientAddress, amount });
+      transaction.update({ sender: wallet, senderPrivateKey, recipientAddress, amount: parseInt(amount) });
     } else {
       transaction = wallet.createTrasaction({
         recipientAddress,
-        amount,
+        amount: parseInt(amount),
         senderPrivateKey,
         chain: blockchain.chain
       });

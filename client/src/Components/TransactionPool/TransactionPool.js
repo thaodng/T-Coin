@@ -8,16 +8,18 @@ import {
   GET_WALLET_BALANCE_URL
 } from '../../config';
 
-const TransactionPool = ({ walletInfo, setWalletInfo, setBlockchain, transactions }) => {
+
+const TransactionPool = ({ walletInfo, setWalletInfo, setDataWalletTransactions, setBlockchain, transactions }) => {
   const [currentSelect, setCurrentSelect] = useState({});
 
   // mine transactions === mine a new block (in this project)
   const onMineBlock = async () => {
-    const { data: blockchain } = await axios.post(`${MINE_BLOCK}`, { minerAddress: walletInfo.publicKey });
+    const { data: { blockchain } } = await axios.post(`${MINE_BLOCK}`, { minerAddress: walletInfo.publicKey });
     // re-calculate balance 
+    setBlockchain(blockchain);
     getWalletBalance({ publicKey: walletInfo.publicKey });
-    // setBlockchain(blockchain);
-    console.log(blockchain);
+    setDataWalletTransactions([]);
+    setCurrentSelect({});
     message.info('Mine a new block success');
 
   };
@@ -75,7 +77,7 @@ const TransactionPool = ({ walletInfo, setWalletInfo, setBlockchain, transaction
           )
         }
       </div>
-      {currentSelect.id && <Transaction transactionData={currentSelect} />}
+      {currentSelect.id && <Transaction transactionData={currentSelect} status="processing" />}
     </div>
   );
 };

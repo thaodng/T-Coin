@@ -14,7 +14,7 @@ import {
 const price = 1;
 
 /* walletInfo: balance, publicKey */
-const Wallet = ({ walletInfo, setWalletInfo }) => {
+const Wallet = ({ walletInfo, setWalletInfo,dataWalletTransactions, setDataWalletTransactions }) => {
   const history = useHistory();
   const [publicKey, setPublicKey] = useState('');
 
@@ -41,7 +41,6 @@ const Wallet = ({ walletInfo, setWalletInfo }) => {
   const [recipientAddress, setRecipientAddress] = useState('');
   const [amount, setAmount] = useState(0);
   const [senderPrivateKey, setSenderPrivateKey] = useState('');
-  const [dataTransactions, setDataTransactions] = useState([]);
 
   const createTransaction = async ({ recipientAddress, amount, senderPrivateKey }) => {
     const { data: { transaction } } = await axios
@@ -63,7 +62,7 @@ const Wallet = ({ walletInfo, setWalletInfo }) => {
       });
 
     console.log(transactions);
-    setDataTransactions(dataTrans => dataTrans.concat(transactions));
+    setDataWalletTransactions(dataTrans => dataTrans.concat(transactions));
     // we call get transaction-pool every x - seconds, so in the future, using socket.io here
   };
 
@@ -160,7 +159,7 @@ const Wallet = ({ walletInfo, setWalletInfo }) => {
 
       <Table
         columns={columns}
-        dataSource={dataTransactions}
+        dataSource={dataWalletTransactions}
         pagination={false}
         style={{ height: '300px', backgroundColor: 'white' }}
       />
