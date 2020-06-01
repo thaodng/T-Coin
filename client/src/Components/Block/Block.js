@@ -6,9 +6,14 @@ import { Link } from 'react-router-dom';
 const Block = ({ blockInfo }) => {
   const { index, nonce, difficulty, timestamp, data } = blockInfo;
   const rewardTransaction = data[data.length - 1];
-  const { txOuts } = rewardTransaction;
-  const address = (Object.keys(txOuts)[0]);
-  const amount = txOuts[address] ;
+
+  let address = 'Nobody';
+  let amount = 0;
+  if (rewardTransaction) {
+    const { txOuts } = rewardTransaction;
+    address = (Object.keys(txOuts)[0]);
+    amount = txOuts[address];
+  }
 
   return (
     <>

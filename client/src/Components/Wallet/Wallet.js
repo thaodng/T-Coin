@@ -56,6 +56,7 @@ const Wallet = ({ walletInfo, setWalletInfo }) => {
     const transactions = recipients
       .map(recipient => {
         return {
+          key: recipient,
           address: recipient,
           amount: transaction.txOuts[recipient]
         }

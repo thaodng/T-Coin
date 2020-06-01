@@ -31,6 +31,7 @@ const TransactionPool = ({ walletInfo, setWalletInfo, setBlockchain, transaction
   const transactionsData = Object.keys(transactions)
     .map(transactionId => {
       return {
+        key: transactionId,
         id: transactions[transactionId].id,
         timestamp: new Date(transactions[transactionId].txIn.timestamp).toLocaleString(),
         senderAddress: `${transactions[transactionId].txIn.senderAddress.slice(0, 64)}....`,

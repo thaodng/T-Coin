@@ -8,6 +8,7 @@ const Blockchain = ({ blockchain }) => {
 
   const data = blockchain.map(block => {
     return {
+      key: block.index,
       index: block.index,
       nonce: block.nonce,
       difficulty: block.difficulty,
