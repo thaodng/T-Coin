@@ -46,9 +46,11 @@ const App = () => {
   useEffect(() => {
     getBlockchain();
     getTransactions();
-    const intervalId = setInterval(getTransactions, 5 * SECONDS_JS);
+    const intervalBlockchain = setInterval(getBlockchain, 5 * SECONDS_JS);
+    const intervalTransactions = setInterval(getTransactions, 5 * SECONDS_JS);
     return () => {
-      clearInterval(intervalId);
+      clearInterval(intervalBlockchain);
+      clearInterval(intervalTransactions);
     }
   }, [])
 
@@ -66,21 +68,25 @@ const App = () => {
               setDataWalletTransactions={setDataWalletTransactions}
             />
           </TabPane>
-          <TabPane tab={<span><TransactionOutlined style={{ fontSize: '16px' }} />Transaction pool</span>} key="2">
-            <TransactionPool
-              walletInfo={walletInfo}
-              setWalletInfo={setWalletInfo}
-              setDataWalletTransactions={setDataWalletTransactions}
-              setBlockchain={setBlockchain}
-              transactions={transactions}
-            />
-          </TabPane>
-          <TabPane tab={<span><RadarChartOutlined style={{ fontSize: '16px' }} />Blockhain network</span>} key="3">
+          {
+            walletInfo.publicKey && (
+              <TabPane tab={<span><TransactionOutlined style={{ fontSize: '16px' }} />Transaction pool</span>} key="2">
+                <TransactionPool
+                  walletInfo={walletInfo}
+                  setWalletInfo={setWalletInfo}
+                  setDataWalletTransactions={setDataWalletTransactions}
+                  setBlockchain={setBlockchain}
+                  transactions={transactions}
+                />
+              </TabPane>
+            )
+          }
+          < TabPane tab={<span><RadarChartOutlined style={{ fontSize: '16px' }} />Blockhain network</span>} key="3">
             <Blockchain blockchain={blockchain} />
           </TabPane>
         </Tabs>
       </div>
-    </CryptoLayout>
+    </CryptoLayout >
   );
 }
 

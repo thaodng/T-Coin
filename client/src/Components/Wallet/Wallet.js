@@ -14,7 +14,7 @@ import {
 const price = 1;
 
 /* walletInfo: balance, publicKey */
-const Wallet = ({ walletInfo, setWalletInfo,dataWalletTransactions, setDataWalletTransactions }) => {
+const Wallet = ({ walletInfo, setWalletInfo, dataWalletTransactions, setDataWalletTransactions }) => {
   const history = useHistory();
   const [publicKey, setPublicKey] = useState('');
 
@@ -62,6 +62,18 @@ const Wallet = ({ walletInfo, setWalletInfo,dataWalletTransactions, setDataWalle
       });
 
     console.log(transactions);
+
+
+    const txs = transactions.map(trans => trans.address)
+    const dtx = dataWalletTransactions.map(dtWallet => dtWallet.address);
+    for (let i = 0; i < txs.length; i++) {
+      const index = dtx.indexOf(txs[i]);
+      if (index) {
+        setDataWalletTransactions(dataTrans => dataTrans.slice(index + 1));
+        break;
+      };
+    };
+
     setDataWalletTransactions(dataTrans => dataTrans.concat(transactions));
     // we call get transaction-pool every x - seconds, so in the future, using socket.io here
   };
