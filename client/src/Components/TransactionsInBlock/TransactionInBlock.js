@@ -6,7 +6,7 @@ const TransactionInBlock = (props) => {
   const { transactions } = props.location.state;
   return (
     <CryptoLayout>
-        {transactions.map(transaction => <Transaction transactionData={transaction} />)}
+      {transactions.map(transaction => <Transaction transactionData={transaction} />)}
     </CryptoLayout>
   );
 };
